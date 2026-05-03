@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Hostel Management – Rooms</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#f7f3ee;--sidebar:#2c2c3e;--sidebar2:#363649;--card:#ffffff;
+  --accent:#e8826a;--accent2:#c96b52;--teal:#4db6ac;--yellow:#f6c344;
+  --purple:#9c6fbe;--text:#2c2c3e;--muted:#8a8a9a;--light:#fdf8f4;
+  --border:#ede8e0;--shadow:0 4px 24px rgba(44,44,62,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;}
+.sidebar{width:240px;min-height:100vh;background:var(--sidebar);display:flex;flex-direction:column;align-items:center;padding:32px 0 24px;position:fixed;top:0;left:0;z-index:100;}
+.logo-circle{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:1.6rem;color:#fff;box-shadow:0 8px 24px rgba(232,130,106,0.4);}
+.logo-name{font-family:'Playfair Display',serif;font-size:1.1rem;color:#fff;line-height:1.2;text-align:center;}
+.logo-sub{font-size:.62rem;color:rgba(255,255,255,.45);letter-spacing:.15em;text-transform:uppercase;margin-top:4px;text-align:center;}
+.managers-label{font-size:.55rem;color:rgba(255,255,255,.35);letter-spacing:.15em;text-transform:uppercase;margin-top:14px;}
+.managers-name{font-family:'Playfair Display',serif;font-size:.95rem;color:var(--accent);margin-top:3px;text-align:center;padding:0 10px;line-height:1.4;}
+.divider{width:80%;height:1px;background:rgba(255,255,255,.08);margin:20px 0;}
+nav{width:100%;}
+nav a{display:flex;align-items:center;gap:12px;padding:12px 28px;color:rgba(255,255,255,.5);text-decoration:none;font-size:.82rem;font-weight:700;transition:.2s;position:relative;}
+nav a:hover{color:#fff;background:rgba(255,255,255,.07);}
+nav a.active{color:#fff;background:rgba(232,130,106,.2);}
+nav a.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:4px;height:60%;background:var(--accent);border-radius:0 4px 4px 0;}
+nav a i{width:18px;text-align:center;}
+.sidebar-footer{margin-top:auto;font-size:.58rem;color:rgba(255,255,255,.25);text-align:center;padding:0 16px;line-height:1.8;}
+.main{margin-left:240px;flex:1;padding:32px 36px;}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;}
+.page-heading{font-family:'Playfair Display',serif;font-size:1.7rem;color:var(--text);}
+.page-heading span{color:var(--accent);}
+.user-chip{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:40px;padding:6px 14px 6px 6px;box-shadow:var(--shadow);}
+.user-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--purple));display:flex;align-items:center;justify-content:center;color:#fff;font-size:.8rem;font-weight:700;}
+.user-nm{font-size:.78rem;font-weight:700;}.user-rl{font-size:.6rem;color:var(--muted);}
+
+/* STATS */
+.mini-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;}
+.mini-card{background:var(--card);border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow);border:1px solid var(--border);}
+.mini-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;}
+.mini-val{font-size:1.8rem;font-weight:800;color:var(--text);}
+.mini-lbl{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;font-weight:700;}
+
+/* TOOLBAR */
+.toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:12px;flex-wrap:wrap;}
+.search-box{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 14px;flex:1;max-width:300px;box-shadow:var(--shadow);}
+.search-box input{background:none;border:none;outline:none;color:var(--text);font-family:'Nunito',sans-serif;font-size:.82rem;width:100%;}
+.search-box input::placeholder{color:var(--muted);}
+.filter-btns{display:flex;gap:8px;}
+.filter-btn{padding:9px 16px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:.76rem;font-weight:700;cursor:pointer;transition:.2s;font-family:'Nunito',sans-serif;}
+.filter-btn:hover,.filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.add-btn{padding:10px 20px;border-radius:10px;background:var(--accent);color:#fff;font-size:.82rem;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:'Nunito',sans-serif;box-shadow:0 4px 14px rgba(232,130,106,.35);transition:.2s;}
+.add-btn:hover{background:var(--accent2);}
+
+/* ROOM CARDS */
+.rooms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px;}
+.room-card{background:var(--card);border-radius:16px;padding:20px;box-shadow:var(--shadow);border:1px solid var(--border);transition:.25s;}
+.room-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(44,44,62,0.13);}
+.room-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.room-num{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--text);}
+.badge{padding:4px 11px;border-radius:20px;font-size:.62rem;font-weight:700;}
+.badge-available{background:#e8f5e9;color:#2e7d32;}
+.badge-occupied{background:#fce4ec;color:#c62828;}
+.badge-maintenance{background:#fff3e0;color:#e65100;}
+.room-type{font-size:.72rem;color:var(--muted);margin-bottom:14px;font-weight:600;}
+.room-info{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.ri-item .ri-val{font-size:.88rem;font-weight:800;color:var(--text);}
+.ri-item .ri-lbl{font-size:.62rem;color:var(--muted);}
+.room-progress{background:#f0ebe5;border-radius:10px;height:6px;overflow:hidden;margin-bottom:14px;}
+.room-progress-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--purple));}
+.room-actions{display:flex;gap:8px;}
+.btn-sm{flex:1;padding:8px;border-radius:9px;border:none;font-size:.72rem;font-weight:700;cursor:pointer;transition:.2s;font-family:'Nunito',sans-serif;}
+.btn-edit{background:#fff0ec;color:var(--accent);}
+.btn-edit:hover{background:#ffe4dc;}
+.btn-view{background:#f3e8ff;color:var(--purple);}
+.btn-view:hover{background:#ead5ff;}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(44,44,62,.5);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--card);border-radius:20px;padding:32px;width:420px;max-width:95vw;box-shadow:0 24px 64px rgba(44,44,62,.2);}
+.modal h3{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--text);margin-bottom:22px;}
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-size:.72rem;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em;}
+.form-group input,.form-group select{width:100%;background:var(--light);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-family:'Nunito',sans-serif;font-size:.84rem;outline:none;transition:.2s;}
+.form-group input:focus,.form-group select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,130,106,.12);}
+.modal-actions{display:flex;gap:10px;margin-top:22px;}
+.btn-cancel{flex:1;padding:12px;border-radius:10px;border:1px solid var(--border);background:none;color:var(--muted);font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;}
+.btn-save{flex:1;padding:12px;border-radius:10px;border:none;background:var(--accent);color:#fff;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <div style="text-align:center;margin-bottom:8px;padding:0 20px;">
+    <div class="logo-circle"><i class="fas fa-home"></i></div>
+    <div class="logo-name">Girls Hostel<br>Management</div>
+    <div class="logo-sub">System</div>
+    <div class="managers-label">Managed By</div>
+    <div class="managers-name">Noor Sabah<br>&amp; Alishba Hafeez</div>
+  </div>
+  <div class="divider"></div>
+  <nav>
+    <a href="index.html"><i class="fas fa-th-large"></i> Dashboard</a>
+    <a href="rooms.html" class="active"><i class="fas fa-bed"></i> Rooms</a>
+    <a href="allocation.html"><i class="fas fa-user-plus"></i> Allocation</a>
+    <a href="checkout.html"><i class="fas fa-sign-out-alt"></i> Checkout</a>
+    <a href="#"><i class="fas fa-user-friends"></i> Visitors</a>
+    <a href="#"><i class="fas fa-comment-dots"></i> Complaints</a>
+    <a href="#"><i class="fas fa-bell"></i> Notices</a>
+    <a href="#"><i class="fas fa-calendar-alt"></i> Leave Requests</a>
+    <a href="#"><i class="fas fa-users"></i> Staff</a>
+    <a href="#"><i class="fas fa-cog"></i> Settings</a>
+    <a href="#"><i class="fas fa-power-off"></i> Logout</a>
+  </nav>
+  <div class="sidebar-footer">© 2024 Girls Hostel Management<br>Noor Sabah &amp; Alishba Hafeez<br>All rights reserved.</div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="page-heading">Room <span>Management</span></div>
+    <div class="user-chip">
+      <div class="user-av">A</div>
+      <div><div class="user-nm">Admin</div><div class="user-rl">Administrator</div></div>
+    </div>
+  </div>
+
+  <div class="mini-stats">
+    <div class="mini-card">
+      <div class="mini-icon" style="background:#e8f5e9;color:#43a047;"><i class="fas fa-check-circle"></i></div>
+      <div><div class="mini-val">32</div><div class="mini-lbl">Available</div></div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-icon" style="background:#fce4ec;color:#c62828;"><i class="fas fa-door-closed"></i></div>
+      <div><div class="mini-val">14</div><div class="mini-lbl">Occupied</div></div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-icon" style="background:#fff3e0;color:#e65100;"><i class="fas fa-tools"></i></div>
+      <div><div class="mini-val">4</div><div class="mini-lbl">Maintenance</div></div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-box">
+      <i class="fas fa-search" style="color:var(--muted);"></i>
+      <input type="text" placeholder="Search rooms..."/>
+    </div>
+    <div class="filter-btns">
+      <button class="filter-btn active" onclick="filterRooms('all',this)">All</button>
+      <button class="filter-btn" onclick="filterRooms('available',this)">Available</button>
+      <button class="filter-btn" onclick="filterRooms('occupied',this)">Occupied</button>
+      <button class="filter-btn" onclick="filterRooms('maintenance',this)">Maintenance</button>
+    </div>
+    <button class="add-btn" onclick="openModal()"><i class="fas fa-plus"></i> Add Room</button>
+  </div>
+
+  <div class="rooms-grid" id="roomsGrid"></div>
+</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h3>Add New Room</h3>
+    <div class="form-group"><label>Room Number</label><input type="text" placeholder="e.g. 101"/></div>
+    <div class="form-group"><label>Room Type</label>
+      <select><option>Single</option><option>Double</option><option>Triple</option><option>Dormitory</option></select>
+    </div>
+    <div class="form-group"><label>Floor</label><input type="text" placeholder="Ground / 1st / 2nd"/></div>
+    <div class="form-group"><label>Capacity</label><input type="number" placeholder="e.g. 2"/></div>
+    <div class="form-group"><label>Status</label>
+      <select><option>Available</option><option>Occupied</option><option>Maintenance</option></select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="closeModal()">Save Room</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const rooms=[
+  {num:"101",type:"Single",floor:"Ground",capacity:1,occupied:0,status:"available"},
+  {num:"102",type:"Double",floor:"Ground",capacity:2,occupied:2,status:"occupied"},
+  {num:"103",type:"Triple",floor:"Ground",capacity:3,occupied:1,status:"available"},
+  {num:"104",type:"Double",floor:"Ground",capacity:2,occupied:2,status:"occupied"},
+  {num:"201",type:"Single",floor:"1st",capacity:1,occupied:0,status:"available"},
+  {num:"202",type:"Double",floor:"1st",capacity:2,occupied:1,status:"available"},
+  {num:"203",type:"Triple",floor:"1st",capacity:3,occupied:3,status:"occupied"},
+  {num:"204",type:"Single",floor:"1st",capacity:1,occupied:0,status:"maintenance"},
+  {num:"301",type:"Double",floor:"2nd",capacity:2,occupied:0,status:"available"},
+  {num:"302",type:"Dormitory",floor:"2nd",capacity:6,occupied:6,status:"occupied"},
+  {num:"303",type:"Single",floor:"2nd",capacity:1,occupied:0,status:"maintenance"},
+  {num:"304",type:"Double",floor:"2nd",capacity:2,occupied:2,status:"occupied"},
+];
+function renderRooms(list){
+  document.getElementById('roomsGrid').innerHTML=list.map(r=>{
+    const pct=r.capacity>0?Math.round((r.occupied/r.capacity)*100):0;
+    return`<div class="room-card">
+      <div class="room-top">
+        <div class="room-num">Room ${r.num}</div>
+        <span class="badge badge-${r.status}">${r.status.charAt(0).toUpperCase()+r.status.slice(1)}</span>
+      </div>
+      <div class="room-type"><i class="fas fa-bed"></i> ${r.type} · ${r.floor} Floor</div>
+      <div class="room-info">
+        <div class="ri-item"><div class="ri-val">${r.capacity}</div><div class="ri-lbl">Capacity</div></div>
+        <div class="ri-item"><div class="ri-val">${r.occupied}</div><div class="ri-lbl">Occupied</div></div>
+        <div class="ri-item"><div class="ri-val">${r.capacity-r.occupied}</div><div class="ri-lbl">Vacant</div></div>
+        <div class="ri-item"><div class="ri-val">${pct}%</div><div class="ri-lbl">Fill Rate</div></div>
+      </div>
+      <div class="room-progress"><div class="room-progress-fill" style="width:${pct}%"></div></div>
+      <div class="room-actions">
+        <button class="btn-sm btn-edit"><i class="fas fa-edit"></i> Edit</button>
+        <button class="btn-sm btn-view"><i class="fas fa-eye"></i> View</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function filterRooms(s,btn){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderRooms(s==='all'?rooms:rooms.filter(r=>r.status===s));
+}
+function openModal(){document.getElementById('modal').classList.add('open');}
+function closeModal(){document.getElementById('modal').classList.remove('open');}
+document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+renderRooms(rooms);
+</script>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Hostel Management – Checkout</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#f7f3ee;--sidebar:#2c2c3e;--sidebar2:#363649;--card:#ffffff;
+  --accent:#e8826a;--accent2:#c96b52;--teal:#4db6ac;--yellow:#f6c344;
+  --purple:#9c6fbe;--text:#2c2c3e;--muted:#8a8a9a;--light:#fdf8f4;
+  --border:#ede8e0;--shadow:0 4px 24px rgba(44,44,62,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;}
+.sidebar{width:240px;min-height:100vh;background:var(--sidebar);display:flex;flex-direction:column;align-items:center;padding:32px 0 24px;position:fixed;top:0;left:0;z-index:100;}
+.logo-circle{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:1.6rem;color:#fff;box-shadow:0 8px 24px rgba(232,130,106,0.4);}
+.logo-name{font-family:'Playfair Display',serif;font-size:1.1rem;color:#fff;line-height:1.2;text-align:center;}
+.logo-sub{font-size:.62rem;color:rgba(255,255,255,.45);letter-spacing:.15em;text-transform:uppercase;margin-top:4px;text-align:center;}
+.managers-label{font-size:.55rem;color:rgba(255,255,255,.35);letter-spacing:.15em;text-transform:uppercase;margin-top:14px;}
+.managers-name{font-family:'Playfair Display',serif;font-size:.95rem;color:var(--accent);margin-top:3px;text-align:center;padding:0 10px;line-height:1.4;}
+.divider{width:80%;height:1px;background:rgba(255,255,255,.08);margin:20px 0;}
+nav{width:100%;}
+nav a{display:flex;align-items:center;gap:12px;padding:12px 28px;color:rgba(255,255,255,.5);text-decoration:none;font-size:.82rem;font-weight:700;transition:.2s;position:relative;}
+nav a:hover{color:#fff;background:rgba(255,255,255,.07);}
+nav a.active{color:#fff;background:rgba(232,130,106,.2);}
+nav a.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:4px;height:60%;background:var(--accent);border-radius:0 4px 4px 0;}
+nav a i{width:18px;text-align:center;}
+.sidebar-footer{margin-top:auto;font-size:.58rem;color:rgba(255,255,255,.25);text-align:center;padding:0 16px;line-height:1.8;}
+.main{margin-left:240px;flex:1;padding:32px 36px;}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;}
+.page-heading{font-family:'Playfair Display',serif;font-size:1.7rem;color:var(--text);}
+.page-heading span{color:var(--accent);}
+.user-chip{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:40px;padding:6px 14px 6px 6px;box-shadow:var(--shadow);}
+.user-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--purple));display:flex;align-items:center;justify-content:center;color:#fff;font-size:.8rem;font-weight:700;}
+.user-nm{font-size:.78rem;font-weight:700;}.user-rl{font-size:.6rem;color:var(--muted);}
+
+.mini-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;}
+.mini-card{background:var(--card);border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow);border:1px solid var(--border);}
+.mini-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;}
+.mini-val{font-size:1.8rem;font-weight:800;color:var(--text);}
+.mini-lbl{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;font-weight:700;}
+
+.layout{display:grid;grid-template-columns:1fr 1.5fr;gap:24px;align-items:start;}
+.form-card{background:var(--card);border-radius:18px;padding:28px;box-shadow:var(--shadow);border:1px solid var(--border);}
+.form-card h3{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--text);margin-bottom:6px;}
+.form-card p{font-size:.75rem;color:var(--muted);margin-bottom:22px;line-height:1.5;}
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-size:.7rem;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em;}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--light);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-family:'Nunito',sans-serif;font-size:.84rem;outline:none;transition:.2s;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,130,106,.12);}
+.form-group textarea{resize:vertical;min-height:80px;}
+.checkout-btn{width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#ef5350,#c62828);color:#fff;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 14px rgba(239,83,80,.3);transition:.2s;}
+.checkout-btn:hover{opacity:.9;transform:translateY(-1px);}
+
+.table-card{background:var(--card);border-radius:18px;padding:28px;box-shadow:var(--shadow);border:1px solid var(--border);}
+.table-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
+.table-header h3{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--text);}
+.search-box{display:flex;align-items:center;gap:8px;background:var(--light);border:1px solid var(--border);border-radius:10px;padding:8px 12px;}
+.search-box input{background:none;border:none;outline:none;color:var(--text);font-family:'Nunito',sans-serif;font-size:.78rem;width:140px;}
+.search-box input::placeholder{color:var(--muted);}
+table{width:100%;border-collapse:collapse;}
+th{font-size:.63rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;padding:10px 12px;text-align:left;border-bottom:2px solid var(--border);}
+td{font-size:.78rem;padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:var(--light);}
+.pill{padding:4px 12px;border-radius:20px;font-size:.63rem;font-weight:700;}
+.pill-red{background:#fce4ec;color:#c62828;}
+.pill-orange{background:#fff3e0;color:#e65100;}
+.action-btns{display:flex;gap:6px;}
+.icon-btn{width:30px;height:30px;border-radius:8px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.75rem;transition:.2s;}
+.icon-btn.view{background:#f3e8ff;color:var(--purple);}
+.icon-btn.del{background:#fce4ec;color:#c62828;}
+.icon-btn:hover{opacity:.75;}
+
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(44,44,62,.5);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--card);border-radius:20px;padding:32px;width:380px;max-width:95vw;text-align:center;box-shadow:0 24px 64px rgba(44,44,62,.2);}
+.modal-icon{font-size:3rem;margin-bottom:14px;}
+.modal h3{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--text);margin-bottom:8px;}
+.modal p{font-size:.8rem;color:var(--muted);margin-bottom:24px;line-height:1.6;}
+.modal-actions{display:flex;gap:10px;}
+.btn-cancel{flex:1;padding:12px;border-radius:10px;border:1px solid var(--border);background:none;color:var(--muted);font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;}
+.btn-confirm{flex:1;padding:12px;border-radius:10px;border:none;background:linear-gradient(135deg,#ef5350,#c62828);color:#fff;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;}
+
+.toast{position:fixed;top:24px;right:24px;background:var(--card);border:1px solid #ffccbc;border-radius:14px;padding:14px 20px;display:flex;align-items:center;gap:10px;font-size:.82rem;font-weight:700;color:var(--accent2);z-index:999;transform:translateX(200%);transition:.4s;box-shadow:var(--shadow);}
+.toast.show{transform:translateX(0);}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <div style="text-align:center;margin-bottom:8px;padding:0 20px;">
+    <div class="logo-circle"><i class="fas fa-home"></i></div>
+    <div class="logo-name">Girls Hostel<br>Management</div>
+    <div class="logo-sub">System</div>
+    <div class="managers-label">Managed By</div>
+    <div class="managers-name">Noor Sabah<br>&amp; Alishba Hafeez</div>
+  </div>
+  <div class="divider"></div>
+  <nav>
+    <a href="index.html"><i class="fas fa-th-large"></i> Dashboard</a>
+    <a href="rooms.html"><i class="fas fa-bed"></i> Rooms</a>
+    <a href="allocation.html"><i class="fas fa-user-plus"></i> Allocation</a>
+    <a href="checkout.html" class="active"><i class="fas fa-sign-out-alt"></i> Checkout</a>
+    <a href="#"><i class="fas fa-user-friends"></i> Visitors</a>
+    <a href="#"><i class="fas fa-comment-dots"></i> Complaints</a>
+    <a href="#"><i class="fas fa-bell"></i> Notices</a>
+    <a href="#"><i class="fas fa-calendar-alt"></i> Leave Requests</a>
+    <a href="#"><i class="fas fa-users"></i> Staff</a>
+    <a href="#"><i class="fas fa-cog"></i> Settings</a>
+    <a href="#"><i class="fas fa-power-off"></i> Logout</a>
+  </nav>
+  <div class="sidebar-footer">© 2024 Girls Hostel Management<br>Noor Sabah &amp; Alishba Hafeez<br>All rights reserved.</div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="page-heading">Checkout / <span>Vacate</span></div>
+    <div class="user-chip">
+      <div class="user-av">A</div>
+      <div><div class="user-nm">Admin</div><div class="user-rl">Administrator</div></div>
+    </div>
+  </div>
+
+  <div class="mini-stats">
+    <div class="mini-card">
+      <div class="mini-icon" style="background:#fce4ec;color:#c62828;"><i class="fas fa-sign-out-alt"></i></div>
+      <div><div class="mini-val">8</div><div class="mini-lbl">Checked Out This Month</div></div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-icon" style="background:#fff3e0;color:#e65100;"><i class="fas fa-clock"></i></div>
+      <div><div class="mini-val">3</div><div class="mini-lbl">Pending Processing</div></div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-icon" style="background:#e8f5e9;color:#2e7d32;"><i class="fas fa-door-open"></i></div>
+      <div><div class="mini-val">36</div><div class="mini-lbl">Rooms Now Available</div></div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="form-card">
+      <h3>Process Checkout</h3>
+      <p>Enter student details to initiate the room vacating process.</p>
+      <div class="form-group"><label>Student ID</label><input type="text" id="coId" placeholder="e.g. STU-2024-001"/></div>
+      <div class="form-group"><label>Student Name</label><input type="text" id="coName" placeholder="Enter student name"/></div>
+      <div class="form-group"><label>Room Number</label>
+        <select id="coRoom">
+          <option value="">Select room</option>
+          <option>102 – Double (Ground)</option><option>104 – Double (Ground)</option>
+          <option>203 – Triple (1st)</option><option>302 – Dormitory (2nd)</option><option>304 – Double (2nd)</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Checkout Date</label><input type="date" id="coDate"/></div>
+      <div class="form-group"><label>Reason for Leaving</label>
+        <select id="coReason">
+          <option>Semester Ended</option><option>Transfer to Another Hostel</option>
+          <option>Personal Reason</option><option>Medical Reason</option>
+          <option>Disciplinary Action</option><option>Other</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Remarks</label><textarea id="coRemarks" placeholder="Any additional notes..."></textarea></div>
+      <button class="checkout-btn" onclick="openConfirm()"><i class="fas fa-sign-out-alt"></i> Process Checkout</button>
+    </div>
+
+    <div class="table-card">
+      <div class="table-header">
+        <h3>Checkout History</h3>
+        <div class="search-box">
+          <i class="fas fa-search" style="color:var(--muted);font-size:.8rem;"></i>
+          <input type="text" placeholder="Search..."/>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>#</th><th>Student</th><th>Room</th><th>Date</th><th>Reason</th><th>Status</th><th>Act.</th></tr></thead>
+        <tbody id="checkoutTable">
+          <tr><td>1</td><td><b>Maryam Iqbal</b><br><span style="color:var(--muted);font-size:.63rem;">STU-2024-006</span></td><td>102</td><td>10 Apr 2024</td><td>Semester Ended</td><td><span class="pill pill-red">Checked Out</span></td><td><div class="action-btns"><button class="icon-btn view"><i class="fas fa-eye"></i></button><button class="icon-btn del"><i class="fas fa-trash"></i></button></div></td></tr>
+          <tr><td>2</td><td><b>Nida Hussain</b><br><span style="color:var(--muted);font-size:.63rem;">STU-2024-007</span></td><td>203</td><td>15 Apr 2024</td><td>Personal Reason</td><td><span class="pill pill-red">Checked Out</span></td><td><div class="action-btns"><button class="icon-btn view"><i class="fas fa-eye"></i></button><button class="icon-btn del"><i class="fas fa-trash"></i></button></div></td></tr>
+          <tr><td>3</td><td><b>Bushra Ali</b><br><span style="color:var(--muted);font-size:.63rem;">STU-2024-008</span></td><td>104</td><td>20 Apr 2024</td><td>Medical Reason</td><td><span class="pill pill-orange">Processing</span></td><td><div class="action-btns"><button class="icon-btn view"><i class="fas fa-eye"></i></button><button class="icon-btn del"><i class="fas fa-trash"></i></button></div></td></tr>
+          <tr><td>4</td><td><b>Rabia Shah</b><br><span style="color:var(--muted);font-size:.63rem;">STU-2024-009</span></td><td>302</td><td>25 Apr 2024</td><td>Transfer</td><td><span class="pill pill-red">Checked Out</span></td><td><div class="action-btns"><button class="icon-btn view"><i class="fas fa-eye"></i></button><button class="icon-btn del"><i class="fas fa-trash"></i></button></div></td></tr>
+          <tr><td>5</td><td><b>Sana Tariq</b><br><span style="color:var(--muted);font-size:.63rem;">STU-2024-010</span></td><td>304</td><td>01 May 2024</td><td>Semester Ended</td><td><span class="pill pill-orange">Processing</span></td><td><div class="action-btns"><button class="icon-btn view"><i class="fas fa-eye"></i></button><button class="icon-btn del"><i class="fas fa-trash"></i></button></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal">
+    <div class="modal-icon">⚠️</div>
+    <h3>Confirm Checkout</h3>
+    <p>Are you sure you want to process this checkout? The room will be marked as available once confirmed.</p>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeConfirm()">Cancel</button>
+      <button class="btn-confirm" onclick="doCheckout()">Yes, Checkout</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><i class="fas fa-check-circle"></i> Checkout processed successfully!</div>
+
+<script>
+let coCount=6;
+function openConfirm(){
+  const id=document.getElementById('coId').value.trim();
+  const name=document.getElementById('coName').value.trim();
+  const room=document.getElementById('coRoom').value;
+  if(!id||!name||!room){alert('Please fill in Student ID, Name and Room.');return;}
+  document.getElementById('confirmModal').classList.add('open');
+}
+function closeConfirm(){document.getElementById('confirmModal').classList.remove('open');}
+function doCheckout(){
+  closeConfirm();
+  const name=document.getElementById('coName').value.trim();
+  const id=document.getElementById('coId').value.trim();
+  const room=document.getElementById('coRoom').value.split('–')[0].trim();
+  const date=document.getElementById('coDate').value;
+  const reason=document.getElementById('coReason').value;
+  const d=date?new Date(date).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}):'—';
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td>${coCount++}</td><td><b>${name}</b><br><span style="color:var(--muted);font-size:.63rem;">${id}</span></td><td>${room}</td><td>${d}</td><td>${reason}</td><td><span class="pill pill-orange">Processing</span></td><td><div class="action-btns"><button class="icon-btn view"><i class="fas fa-eye"></i></button><button class="icon-btn del"><i class="fas fa-trash"></i></button></div></td>`;
+  document.getElementById('checkoutTable').appendChild(tr);
+  ['coId','coName','coRemarks'].forEach(x=>document.getElementById(x).value='');
+  document.getElementById('coRoom').value='';
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+document.getElementById('confirmModal').addEventListener('click',function(e){if(e.target===this)closeConfirm();});
+</script>
+</body>
+</html>
